@@ -52,7 +52,9 @@ RUN apk add --no-cache=true --update \
     zlib-dev \
     jpeg \
     zip \
+    nodejs \
     freetype-dev
+
 
 RUN python3 -m ensurepip \
     && pip3 install --upgrade pip setuptools \
@@ -64,13 +66,17 @@ RUN python3 -m ensurepip \
 #
 # Clone repo and prepare working directory
 #
-RUN git clone -b sql-extended https://github.com/aliaziz7/Userbootable /home/projectbish/
-RUN mkdir /home/projectbish/bin/
-WORKDIR /home/projectbish/
+RUN git clone -b sql-extended https://github.com/aliaziz7/Userbootable /root/userbot
+RUN mkdir /root/userbot/bin/
+WORKDIR /root/userbot/
+
+#
+# Copies session and config (if it exists)
+#
+COPY ./sample_config.env ./userbot.session* ./config.env* /root/userbot/
 
 #
 # Install requirements
 #
 RUN pip3 install -r requirements.txt
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 CMD ["python3","-m","userbot"]
