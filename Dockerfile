@@ -5,6 +5,7 @@ FROM alpine:edge
 # We have to uncomment Community repo for some packages
 #
 RUN sed -e 's;^#http\(.*\)/edge/community;http\1/edge/community;g' -i /etc/apk/repositories
+RUN echo 'http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories
 
 #
 # Installing Packages
@@ -52,12 +53,14 @@ RUN apk add --no-cache=true --update \
     zlib-dev \
     jpeg \
     zip \
+    megatools \
     nodejs \
     freetype-dev
 
 
 RUN python3 -m ensurepip \
     && pip3 install --upgrade pip setuptools \
+    && pip3 install wheel \
     && rm -r /usr/lib/python*/ensurepip && \
     if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi && \
     if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
@@ -66,9 +69,9 @@ RUN python3 -m ensurepip \
 #
 # Clone repo and prepare working directory
 #
-RUN git clone -b sql-extended https://github.com/aliaziz7/Userbootable /root/userbot
-RUN mkdir /root/userbot/bin/
-WORKDIR /root/userbot/
+RUN git clone -b sql-extended https://github.com/MoveAngel/One4uBot /root/One4uBot
+RUN mkdir /root/One4uBot/bin/
+WORKDIR /root/One4uBot/
 
 #
 # Copies session and config (if it exists)
